@@ -65,8 +65,10 @@ workflows:
   localstack-deploy:
     jobs:
       - install:
+          context: aws-localstack
           <<: *always-filter
       - deploy:
+          context: aws-localstack
           requires:
             - install
           <<: *always-filter
