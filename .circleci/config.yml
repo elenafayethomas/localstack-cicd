@@ -39,12 +39,8 @@ jobs:
       - setup_remote_docker
       - node/install-packages
       - run:
-          name: install LocalStack
-          # npm with localstack has problems with cdklocal
-          # should install globally rather than locally to fix
-          # https://docs.localstack.cloud/user-guide/integrations/aws-cdk/#aws-cdk-cli-for-localstack
+          name: Install LocalStack
           command: |
-            npm i -g aws-cdk-local aws-cdk
             pip3 install localstack awscli-local[ver1]
             docker pull localstack/localstack
       - persist_to_workspace:
@@ -57,11 +53,12 @@ jobs:
       - attach_workspace:
           at: ~/localstack-cicd
       - run:
-          name: deploy LocalStack
+          name: Deploy LocalStack
           command: |
             localstack start -d
             localstack wait -t 15
-            cdklocal deploy
+            npm run local bootstrap
+            npm run local deploy -- --require-approval=never
             awslocal s3api list-buckets
 
 workflows:
