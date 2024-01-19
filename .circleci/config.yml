@@ -52,6 +52,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/localstack-cicd
+      - setup_remote_docker
       - run:
           name: Deploy LocalStack
           command: |
@@ -65,10 +66,8 @@ workflows:
   localstack-deploy:
     jobs:
       - install:
-          context: aws-localstack
           <<: *always-filter
       - deploy:
-          context: aws-localstack
           requires:
             - install
           <<: *always-filter
