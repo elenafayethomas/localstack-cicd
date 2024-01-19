@@ -11,7 +11,6 @@ main-filter: &main-filter
       only: main
 
 orbs:
-  python: circleci/python@2.1.1
   node: circleci/node@5.2.0
 
 executors:
@@ -37,11 +36,15 @@ jobs:
     description: Install dependencies
     steps:
       - checkout
+      - setup_remote_docker
       - node/install-packages
       - run:
           name: install LocalStack
+          # npm with localstack has problems with cdklocal
+          # should install globally rather than locally to fix
+          # https://docs.localstack.cloud/user-guide/integrations/aws-cdk/#aws-cdk-cli-for-localstack
           command: |
-            npm i -g awscdk-local aws-cdk
+            npm i -g aws-cdk-local aws-cdk
             pip3 install localstack awscli-local[ver1]
             docker pull localstack/localstack
       - persist_to_workspace:
@@ -65,8 +68,8 @@ workflows:
   localstack-deploy:
     jobs:
       - install:
-          name: install-localstack
           <<: *always-filter
       - deploy:
-          name: deploy-to-localstack
+          requires:
+            - install
           <<: *always-filter
