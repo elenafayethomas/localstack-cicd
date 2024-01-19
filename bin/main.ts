@@ -7,7 +7,7 @@ const app = new cdk.App();
 
 new LocalstackDemoStack(app, 'LocalstackCicdStack', {
     env: {
-        account: cdk.Aws.ACCOUNT_ID,
-        region: cdk.Aws.REGION,
+        account: '000000000000',
+        region: 'us-east-1',
     }
 });
