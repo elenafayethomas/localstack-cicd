@@ -41,7 +41,6 @@ jobs:
       - run:
           name: Install LocalStack
           command: |
-            pip3 install localstack awscli-local[ver1]
             docker pull localstack/localstack
       - persist_to_workspace:
           root: ~/localstack-cicd
@@ -56,6 +55,7 @@ jobs:
       - run:
           name: Deploy LocalStack
           command: |
+            pip3 install localstack awscli-local[ver1]
             localstack start -d
             localstack wait -t 15
             npm run local bootstrap
